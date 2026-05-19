@@ -3,12 +3,16 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/fetch-github-docs.mjs",
+    "prebuild": "node scripts/fetch-github-docs.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
   },
   "dependencies": {
+    "@types/marked": "^6.0.0",
+    "marked": "^18.0.4",
     "next": "16.2.6",
     "react": "19.2.4",
     "react-dom": "19.2.4"
