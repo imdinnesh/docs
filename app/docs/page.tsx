@@ -1,121 +1,131 @@
 import Link from 'next/link';
 import { getDocs, getRepoInfo } from '@/lib/docs';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { BookOpen, GitBranch, Terminal, Calendar, ArrowRight, Library, HardDrive } from 'lucide-react';
 
 export default async function DocsIndexPage() {
   const docs = getDocs();
   const repoInfo = getRepoInfo();
 
   return (
-    <div className="mx-auto w-full max-w-4xl px-6 py-12 md:px-12 md:py-16">
-      {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-zinc-900 px-6 py-12 text-white shadow-xl dark:bg-white dark:text-zinc-900 sm:px-12 sm:py-16">
-        <div className="relative z-10 max-w-lg">
-          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-            Documentation Portal
+    <div className="mx-auto w-full max-w-5xl px-6 py-12 md:px-12 md:py-20 space-y-12">
+      {/* Welcome Banner Card (Minimal) */}
+      <div className="relative overflow-hidden rounded-xl border border-border bg-card p-8 md:p-12">
+        <div className="relative z-10 max-w-2xl space-y-5">
+          <Badge variant="outline" className="text-xs font-semibold px-3 py-1 rounded-sm border-border bg-transparent text-foreground">
+            <span className="mr-2 h-1.5 w-1.5 rounded-full bg-foreground animate-pulse"></span>
+            Build Synchronized
+          </Badge>
+          <h1 className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
+            Documentation Hub
           </h1>
-          <p className="mt-4 text-base text-zinc-300 dark:text-zinc-600">
-            Welcome to the developer documentation portal. This site compiles static Markdown files directly from your GitHub repository during the build phase.
+          <p className="text-base text-muted-foreground leading-relaxed">
+            Welcome to the developer documentation portal. This site compiles static Markdown files directly from your GitHub repository during the build phase to render high-performance document portals.
           </p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <span className="inline-flex items-center gap-1 rounded-md bg-white/10 px-2.5 py-1 text-xs font-semibold dark:bg-black/5">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              Live Synced Build
-            </span>
-          </div>
         </div>
-        {/* Dynamic mesh gradient overlay */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-zinc-800 via-transparent to-zinc-900 opacity-50 dark:from-zinc-100 dark:to-zinc-200" />
       </div>
 
-      {/* Repo Stats Grid */}
-      <div className="mt-12 grid gap-6 sm:grid-cols-3">
-        <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-            Source Repository
-          </div>
-          <div className="mt-2 text-lg font-bold text-zinc-800 dark:text-zinc-100 truncate" title={`${repoInfo.owner}/${repoInfo.repo}`}>
-            {repoInfo.owner}/{repoInfo.repo}
-          </div>
-          <div className="mt-1 text-xs text-zinc-500">
-            Branch: <span className="font-mono">{repoInfo.branch}</span>
-          </div>
-        </div>
+      {/* Stats Grid using shadcn Cards */}
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Card className="shadow-none border-border bg-transparent hover:bg-card hover:border-foreground/20 transition-colors">
+          <CardHeader className="pb-2 space-y-1">
+            <CardDescription className="text-xs font-semibold tracking-wide text-muted-foreground flex items-center gap-1.5">
+              <Terminal className="h-4 w-4" /> Source Repository
+            </CardDescription>
+            <CardTitle className="text-lg font-bold text-foreground truncate" title={`${repoInfo.owner}/${repoInfo.repo}`}>
+              {repoInfo.owner}/{repoInfo.repo}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground flex items-center gap-1.5 font-mono">
+              <GitBranch className="h-4 w-4" /> {repoInfo.branch}
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-            Document Count
-          </div>
-          <div className="mt-2 text-3xl font-extrabold text-zinc-800 dark:text-zinc-100">
-            {docs.length}
-          </div>
-          <div className="mt-1 text-xs text-zinc-500">
-            Markdown files generated
-          </div>
-        </div>
+        <Card className="shadow-none border-border bg-transparent hover:bg-card hover:border-foreground/20 transition-colors">
+          <CardHeader className="pb-2 space-y-1">
+            <CardDescription className="text-xs font-semibold tracking-wide text-muted-foreground flex items-center gap-1.5">
+              <Library className="h-4 w-4" /> Documents
+            </CardDescription>
+            <CardTitle className="text-3xl font-bold text-foreground">
+              {docs.length}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground flex items-center gap-1.5">
+              <HardDrive className="h-4 w-4" /> Compiled pages
+            </div>
+          </CardContent>
+        </Card>
 
-        <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
-          <div className="text-xs font-bold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-            Last Sync
-          </div>
-          <div className="mt-2 text-base font-bold text-zinc-800 dark:text-zinc-100">
-            {repoInfo.lastBuilt ? (
-              new Date(repoInfo.lastBuilt).toLocaleDateString(undefined, {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-              })
-            ) : (
-              'N/A'
-            )}
-          </div>
-          <div className="mt-1 text-xs text-zinc-500">
-            Static build compilation
-          </div>
-        </div>
+        <Card className="shadow-none border-border bg-transparent hover:bg-card hover:border-foreground/20 transition-colors">
+          <CardHeader className="pb-2 space-y-1">
+            <CardDescription className="text-xs font-semibold tracking-wide text-muted-foreground flex items-center gap-1.5">
+              <Calendar className="h-4 w-4" /> Last Sync
+            </CardDescription>
+            <CardTitle className="text-base font-bold text-foreground">
+              {repoInfo.lastBuilt ? (
+                new Date(repoInfo.lastBuilt).toLocaleDateString(undefined, {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              ) : (
+                'N/A'
+              )}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-sm text-muted-foreground">
+              Static compilation snapshot
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       {/* Document Directory */}
-      <div className="mt-16">
-        <h2 className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
-          Explore Documents
+      <div className="space-y-6 pt-6">
+        <h2 className="text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
+          <BookOpen className="h-4 w-4 text-muted-foreground" /> Explore Documents
         </h2>
-        <div className="mt-6 grid gap-6 sm:grid-cols-2">
+        <div className="grid gap-4 sm:grid-cols-2">
           {docs.map((doc) => (
-            <Link
-              key={doc.slug}
-              href={`/docs/${doc.slug}`}
-              className="group flex flex-col justify-between rounded-xl border border-zinc-200 bg-white p-6 shadow-sm transition-all hover:border-zinc-400 hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900 dark:hover:border-zinc-600"
-            >
-              <div>
-                <h3 className="text-base font-bold text-zinc-900 group-hover:text-black dark:text-zinc-100 dark:group-hover:text-white">
-                  {doc.title}
-                </h3>
-                {doc.metadata.description && (
-                  <p className="mt-2 text-sm text-zinc-500 dark:text-zinc-400 line-clamp-2">
-                    {doc.metadata.description}
-                  </p>
-                )}
-              </div>
-              <div className="mt-4 flex items-center justify-between">
-                <div className="flex flex-wrap gap-1">
+            <Card key={doc.slug} className="group hover:border-foreground/40 transition-all duration-200 flex flex-col justify-between shadow-none bg-transparent hover:bg-card border-border">
+              <CardHeader className="p-5">
+                <div className="space-y-2">
+                  <CardTitle className="text-base font-bold text-foreground group-hover:text-foreground transition-colors">
+                    {doc.title}
+                  </CardTitle>
+                  {doc.metadata.description && (
+                    <CardDescription className="line-clamp-2 leading-relaxed text-sm text-muted-foreground">
+                      {doc.metadata.description}
+                    </CardDescription>
+                  )}
+                </div>
+              </CardHeader>
+              <CardContent className="px-5 pb-5 pt-0 flex items-center justify-between mt-auto">
+                <div className="flex flex-wrap gap-1.5">
                   {doc.metadata.tags?.slice(0, 2).map((tag) => (
-                    <span
+                    <Badge
                       key={tag}
-                      className="rounded bg-zinc-50 px-2 py-0.5 text-2xs font-medium text-zinc-500 dark:bg-zinc-800 dark:text-zinc-400"
+                      variant="secondary"
+                      className="text-xs font-medium px-2 py-0.5 rounded-sm text-muted-foreground bg-muted border-transparent group-hover:bg-foreground group-hover:text-background transition-colors"
                     >
-                      #{tag}
-                    </span>
+                      {tag}
+                    </Badge>
                   ))}
                 </div>
-                <span className="text-xs font-semibold text-zinc-900 dark:text-white group-hover:translate-x-1 transition-transform inline-flex items-center gap-0.5">
-                  Read
-                  <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
-                </span>
-              </div>
-            </Link>
+                <Button variant="ghost" size="sm" asChild className="group-hover:translate-x-1 transition-transform text-xs font-medium pr-0 text-muted-foreground group-hover:text-foreground bg-transparent hover:bg-transparent">
+                  <Link href={`/docs/${doc.slug}`} className="flex items-center gap-1.5">
+                    Read <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

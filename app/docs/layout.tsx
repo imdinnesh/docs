@@ -11,7 +11,8 @@ export default function DocsLayout({
   const repoInfo = getRepoInfo();
 
   return (
-    <div className="flex min-h-screen w-full flex-col bg-zinc-50 dark:bg-zinc-950 md:flex-row">
+    <div className="relative flex min-h-screen w-full flex-col bg-background text-foreground md:flex-row">
+      {/* Main UI */}
       <Sidebar docs={docs} repoInfo={repoInfo} />
       <div className="flex min-w-0 flex-1 flex-col">
         {children}
